@@ -1,6 +1,3 @@
-from pprint import pprint
-
-
 class Graph:
     def __init__(self):
         self.g = {}
@@ -12,6 +9,11 @@ class Graph:
             self.g.update({e: []})
         self.g.get(v).append(e)
         self.g.get(e).append(v)
+        
+    def printvw(self):
+        for vertex in range(len(self.g)):
+            for edge in self.g.get(vertex):
+                print(vertex,'-',edge)
 
 
 class DFS:
@@ -27,9 +29,26 @@ class DFS:
     def dfs(self, g, v):
         self.marked[v] = True
         for j in g.get(v):
-            if not self.marked[j]:
+            if self.marked[j] == False:
                 self.dfs(g, j)
-                self.edgeTo[v] = v
+                self.edgeTo[j] = v
+        return self.marked
+    
+    def haspath(self, v):
+        return self.marked[v]
+    
+    def paths(self, s, v):
+        if not self.haspath(v):
+            return None
+        self.path = []
+        while v != s:
+            x = v
+            self.path.append(x)
+            v = self.edgeTo[x]
+        self.path.append(s)
+        return self.path
+            
+            
 
 G = Graph()
 G.addedge(0, 1)
@@ -45,7 +64,10 @@ G.addedge(9, 10)
 G.addedge(9, 11)
 G.addedge(9, 12)
 G.addedge(11, 12)
+#G.printvw()
 d = DFS(G.g, 0)
-pprint(G.g)
-print(d.edgeTo, d.marked)
-# print(len(G.g.get(3)))
+print(d.paths(0, 6))
+#print(G.g)
+#print(d.edgeTo)
+#print(d.marked)
+
